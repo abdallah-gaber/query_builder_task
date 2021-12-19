@@ -49,12 +49,14 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
                 Consumer<UserViewModel>(
                     builder: (context, userViewModel, child) {
                   return Expanded(
-                    child: ListView.builder(
+                    child: userViewModel.filteredUsersList.isNotEmpty ? ListView.builder(
                         itemCount: userViewModel.filteredUsersList.length,
                         itemBuilder: (context, index) {
                           return UserWidget(
                               userModel: userViewModel.filteredUsersList[index]);
-                        }),
+                        }) : const Center(
+                          child: Text('No Data with these filter Query Params'),
+                        ),
                   );
                 })
               ])),
