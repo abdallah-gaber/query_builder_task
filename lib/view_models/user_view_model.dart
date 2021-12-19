@@ -5,8 +5,8 @@ import 'package:query_builder_task/models/query_model.dart';
 import 'package:query_builder_task/models/user_model.dart';
 
 class UserViewModel with ChangeNotifier {
-  List<UserModel>? allFakeUsersList;
-  List<UserModel>? filteredUsersList;
+  List<UserModel> allFakeUsersList = [];
+  List<UserModel> filteredUsersList = [];
 
   loadAllUsersList() {
     ApiCaller().getAllFakeUsersList().then((allUsers) {
@@ -16,7 +16,7 @@ class UserViewModel with ChangeNotifier {
 
   filterUsersList(List<QueryModel> queryModels, String? logicOperator) {
     filteredUsersList = [];
-    for (UserModel um in allFakeUsersList ?? []) {
+    for (UserModel um in allFakeUsersList) {
       if ((logicOperator != null &&
               queryModels.length == 2 &&
               LogicOperators.combineLogicOperations(
@@ -26,7 +26,7 @@ class UserViewModel with ChangeNotifier {
           (logicOperator == null &&
               queryModels.length == 1 &&
               meetQuery(queryModels[0], um))) {
-        filteredUsersList!.add(um);
+        filteredUsersList.add(um);
       }
     }
     notifyListeners();

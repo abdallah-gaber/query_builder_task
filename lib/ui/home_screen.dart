@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:query_builder_task/common/strings.dart';
 import 'package:query_builder_task/models/query_model.dart';
+import 'package:query_builder_task/ui/filter_result_screen.dart';
 import 'package:query_builder_task/ui/widgets/query_item_widget.dart';
 import 'package:query_builder_task/view_models/user_view_model.dart';
 
@@ -29,12 +30,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Container(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Container(
           padding: const EdgeInsets.all(10),
-          child: Column(
+          child: ListView(
             children: [
               const SizedBox(
                 height: 40,
@@ -157,6 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   queryItemWidget.length == 2
                                       ? selectedLogicOperator
                                       : null);
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const FilterResultScreen()));
                         }
                       },
                       child: const Center(

@@ -44,18 +44,22 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
     super.initState();
     selectedColumn = columnsNames[0];
     widget.queryModel.columnName = selectedColumn;
-    selectedOperator = stringOperators[0];
+    selectedOperator = numberOperators[0];
     widget.queryModel.operator = selectedOperator;
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           children: [
             Expanded(
-                flex: selectedColumn == null || selectedColumn == "Age" ? 2 : 1,
+                flex: (selectedColumn == null ||
+                        ColumnNames.useNumberOperator(selectedColumn!))
+                    ? 2
+                    : 1,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
@@ -76,13 +80,6 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                         );
                       }).toList(),
                       value: selectedColumn,
-                      // hint: const Padding(
-                      //   padding: EdgeInsets.all(8.0),
-                      //   child: Text(
-                      //     "Column Name",
-                      //     style: TextStyle(fontSize: 14),
-                      //   ),
-                      // ),
                       onChanged: (value) {
                         setState(() {
                           selectedOperator =
