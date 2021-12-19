@@ -4,7 +4,7 @@ import 'package:query_builder_task/models/user_model.dart';
 class ApiCaller {
   Dio dio = Dio();
 
-  Future<List<UserModel>> getAllFakeUsersList(context) async {
+  Future<List<UserModel>> getAllFakeUsersList() async {
     try {
       var response = await dio.get(
         'https://mocki.io/v1/fb545e3a-6df0-4c95-b7ee-0704ffb5ba55',

@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:query_builder_task/models/query_model.dart';
 import 'package:query_builder_task/ui/widgets/query_item_widget.dart';
+import 'package:query_builder_task/view_models/user_view_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -10,14 +13,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<QueryItemWidget> queryItemWidget = [const QueryItemWidget()];
+  List<QueryItemWidget> queryItemWidget = [QueryItemWidget()];
   List<String> logicOperators = ["AND", "OR"];
-  String? selectedLogicOperator;
+  late String selectedLogicOperator;
 
   @override
   void initState() {
     super.initState();
     selectedLogicOperator = logicOperators[0];
+
+    //Load All Data
+    Provider.of<UserViewModel>(context, listen: false).loadAllUsersList();
   }
 
   @override
@@ -46,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         setState(() {
                           queryItemWidget
-                              .add(const QueryItemWidget(firstWidget: false));
+                              .add(QueryItemWidget(firstWidget: false));
                         });
                       },
                       icon: const Icon(
@@ -98,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               value: selectedLogicOperator,
                               onChanged: (value) {
                                 setState(() {
-                                  selectedLogicOperator = value;
+                                  selectedLogicOperator = value!;
                                 });
                               },
                             ),
@@ -141,7 +147,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: const Color(0xFF2D9CDB),
                   ),
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (validateData()) {
+                          Provider.of<UserViewModel>(context, listen: false)
+                              .filterUsersList(
+                                  collectData(), selectedLogicOperator);
+                        }
+                      },
                       child: const Center(
                         child: Icon(
                           CupertinoIcons.search,
@@ -155,5 +167,25 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  bool validateData() {
+    for (QueryItemWidget qiw in queryItemWidget) {
+      if (qiw.queryModel.data == null || qiw.queryModel.data!.isEmpty) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("You must Enter Data")));
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  List<QueryModel> collectData() {
+    List<QueryModel> qm = [];
+    for (QueryItemWidget qiw in queryItemWidget) {
+      qm.add(qiw.queryModel);
+    }
+    return qm;
   }
 }

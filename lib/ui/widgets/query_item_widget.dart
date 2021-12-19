@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:query_builder_task/models/query_model.dart';
 
 class QueryItemWidget extends StatefulWidget {
   final bool firstWidget;
+  final QueryModel queryModel = QueryModel();
 
-  const QueryItemWidget({this.firstWidget = true, Key? key}) : super(key: key);
+  QueryItemWidget({this.firstWidget = true, Key? key}) : super(key: key);
 
   @override
   _QueryItemWidgetState createState() => _QueryItemWidgetState();
@@ -26,14 +28,15 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
   ];
   String? selectedColumn;
   String? selectedOperator;
-  TextEditingController dataController = TextEditingController();
 
 
   @override
   void initState() {
     super.initState();
     selectedColumn = columnsNames[0];
+    widget.queryModel.columnName = selectedColumn;
     selectedOperator = stringOperators[0];
+    widget.queryModel.operator = selectedOperator;
   }
 
   @override
@@ -77,6 +80,7 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                               ? numberOperators[0]
                               : stringOperators[0];
                           selectedColumn = value;
+                          widget.queryModel.columnName = value;
                         });
                       },
                     ),
@@ -121,6 +125,7 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                     onChanged: (value) {
                       setState(() {
                         selectedOperator = value;
+                        widget.queryModel.operator = value;
                       });
                     },
                   ),
@@ -139,8 +144,12 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
               borderRadius: const BorderRadius.all(Radius.circular(10.0)),
               border: Border.all(color: const Color(0xFFE5E5E5))),
           child: TextField(
-            controller: dataController,
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: TextInputType.text,
+            onChanged: (data){
+              setState(() {
+                widget.queryModel.data = data;
+              });
+            },
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Data',
