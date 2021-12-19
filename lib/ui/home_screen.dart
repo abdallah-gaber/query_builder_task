@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:query_builder_task/common/strings.dart';
 import 'package:query_builder_task/models/query_model.dart';
 import 'package:query_builder_task/ui/widgets/query_item_widget.dart';
 import 'package:query_builder_task/view_models/user_view_model.dart';
@@ -14,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<QueryItemWidget> queryItemWidget = [QueryItemWidget()];
-  List<String> logicOperators = ["AND", "OR"];
+  List<String> logicOperators = [LogicOperators.AND, LogicOperators.OR];
   late String selectedLogicOperator;
 
   @override
@@ -48,17 +49,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.w700,
                         fontSize: 24),
                   )),
-                  IconButton(
-                      onPressed: () {
-                        setState(() {
-                          queryItemWidget
-                              .add(QueryItemWidget(firstWidget: false));
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.green,
-                      ))
+                  if (queryItemWidget.length != 2)
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            queryItemWidget
+                                .add(QueryItemWidget(firstWidget: false));
+                          });
+                        },
+                        icon: const Icon(
+                          CupertinoIcons.add_circled,
+                          color: Colors.green,
+                        ))
                 ],
               ),
               const SizedBox(
@@ -151,7 +153,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (validateData()) {
                           Provider.of<UserViewModel>(context, listen: false)
                               .filterUsersList(
-                                  collectData(), selectedLogicOperator);
+                                  collectData(),
+                                  queryItemWidget.length == 2
+                                      ? selectedLogicOperator
+                                      : null);
                         }
                       },
                       child: const Center(

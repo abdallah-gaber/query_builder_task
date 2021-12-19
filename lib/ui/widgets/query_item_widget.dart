@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:query_builder_task/common/strings.dart';
 import 'package:query_builder_task/models/query_model.dart';
 
 class QueryItemWidget extends StatefulWidget {
@@ -13,22 +14,30 @@ class QueryItemWidget extends StatefulWidget {
 
 class _QueryItemWidgetState extends State<QueryItemWidget> {
   List<String> columnsNames = [
-    "First Name",
-    "Last Name",
-    "Full Name",
-    "Gender",
-    "Age"
+    ColumnNames.ID_COLUMN,
+    ColumnNames.FIRST_NAME_COLUMN,
+    ColumnNames.LAST_NAME_COLUMN,
+    ColumnNames.FULL_NAME_COLUMN,
+    ColumnNames.GENDER_COLUMN,
+    ColumnNames.AGE_COLUMN,
   ];
-  List<String> numberOperators = ["=", "!=", ">", "<"];
+
+  List<String> numberOperators = [
+    NumberOperators.EQUALS,
+    NumberOperators.NOT_EQUALS,
+    NumberOperators.GREATER_THAN,
+    NumberOperators.LESS_THAN,
+  ];
+
   List<String> stringOperators = [
-    "Starts with",
-    "Ends with",
-    "Contains",
-    "Exact"
+    StringOperators.STARTS_WITH,
+    StringOperators.ENDS_WITH,
+    StringOperators.CONTAINS,
+    StringOperators.EXACT,
   ];
+
   String? selectedColumn;
   String? selectedOperator;
-
 
   @override
   void initState() {
@@ -76,9 +85,10 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                       // ),
                       onChanged: (value) {
                         setState(() {
-                          selectedOperator = value == "Age"
-                              ? numberOperators[0]
-                              : stringOperators[0];
+                          selectedOperator =
+                              ColumnNames.useNumberOperator(value!)
+                                  ? numberOperators[0]
+                                  : stringOperators[0];
                           selectedColumn = value;
                           widget.queryModel.columnName = value;
                         });
@@ -102,7 +112,7 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                     isExpanded: true,
                     items: (selectedColumn == null
                             ? []
-                            : (selectedColumn == "Age"
+                            : (ColumnNames.useNumberOperator(selectedColumn!)
                                 ? numberOperators
                                 : stringOperators))
                         .map((item) {
@@ -145,7 +155,7 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
               border: Border.all(color: const Color(0xFFE5E5E5))),
           child: TextField(
             keyboardType: TextInputType.text,
-            onChanged: (data){
+            onChanged: (data) {
               setState(() {
                 widget.queryModel.data = data;
               });
