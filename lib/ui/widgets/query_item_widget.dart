@@ -86,6 +86,7 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                               ColumnNames.useNumberOperator(value!)
                                   ? numberOperators[0]
                                   : stringOperators[0];
+                          widget.queryModel.operator = selectedOperator;
                           selectedColumn = value;
                           widget.queryModel.columnName = value;
                         });

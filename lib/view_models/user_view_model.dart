@@ -33,7 +33,7 @@ class UserViewModel with ChangeNotifier {
   }
 
   bool meetQuery(QueryModel qm, UserModel um) {
-    if (ColumnNames.useNumberOperator(qm.columnName!)) {
+    if (!ColumnNames.useNumberOperator(qm.columnName!)) {
       switch (qm.columnName) {
         case ColumnNames.FIRST_NAME_COLUMN:
           return meetSubQuery(qm.data!, qm.operator!, um.firstName!, false);
@@ -65,22 +65,22 @@ class UserViewModel with ChangeNotifier {
         case NumberOperators.NOT_EQUALS:
           return int.tryParse(columnValue) != int.tryParse(userColumnValue);
         case NumberOperators.GREATER_THAN:
-          return (int.tryParse(columnValue) ?? 0) >
-              (int.tryParse(userColumnValue) ?? 0);
+          return (int.tryParse(userColumnValue) ?? 0) >
+              (int.tryParse(columnValue) ?? 0);
         case NumberOperators.LESS_THAN:
-          return (int.tryParse(columnValue) ?? 0) <
-              (int.tryParse(userColumnValue) ?? 0);
+          return (int.tryParse(userColumnValue) ?? 0) <
+              (int.tryParse(columnValue) ?? 0);
       }
     } else {
       switch (operator) {
         case StringOperators.STARTS_WITH:
-          return userColumnValue.startsWith(columnValue);
+          return userColumnValue.toLowerCase().startsWith(columnValue.toLowerCase());
         case StringOperators.ENDS_WITH:
-          return userColumnValue.endsWith(columnValue);
+          return userColumnValue.toLowerCase().endsWith(columnValue.toLowerCase());
         case StringOperators.CONTAINS:
-          return userColumnValue.contains(columnValue);
+          return userColumnValue.toLowerCase().contains(columnValue.toLowerCase());
         case StringOperators.EXACT:
-          return columnValue == userColumnValue;
+          return columnValue.toLowerCase() == userColumnValue.toLowerCase();
       }
     }
 

@@ -30,7 +30,9 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
         body: SafeArea(
           child: Container(
               padding: const EdgeInsets.all(10),
-              child: Column(children: [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 const SizedBox(
                   height: 20,
                 ),
@@ -46,12 +48,14 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
                 ),
                 Consumer<UserViewModel>(
                     builder: (context, userViewModel, child) {
-                  return ListView.builder(
-                      itemCount: userViewModel.filteredUsersList.length,
-                      itemBuilder: (context, index) {
-                        return UserWidget(
-                            userModel: userViewModel.filteredUsersList[index]);
-                      });
+                  return Expanded(
+                    child: ListView.builder(
+                        itemCount: userViewModel.filteredUsersList.length,
+                        itemBuilder: (context, index) {
+                          return UserWidget(
+                              userModel: userViewModel.filteredUsersList[index]);
+                        }),
+                  );
                 })
               ])),
         ));
