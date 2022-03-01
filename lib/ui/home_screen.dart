@@ -1,20 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:query_builder_task/common/strings.dart';
 import 'package:query_builder_task/models/query_model.dart';
 import 'package:query_builder_task/ui/filter_result_screen.dart';
 import 'package:query_builder_task/ui/widgets/query_item_widget.dart';
-import 'package:query_builder_task/view_models/user_view_model.dart';
 
-class HomeScreen extends StatefulWidget {
+import '../main.dart';
+
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<QueryItemWidget> queryItemWidget = [QueryItemWidget()];
   List<String> logicOperators = [LogicOperators.AND, LogicOperators.OR];
   late String selectedLogicOperator;
@@ -23,9 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     selectedLogicOperator = logicOperators[0];
+    initProviders();
+  }
 
-    //Load All Data
-    Provider.of<UserViewModel>(context, listen: false).loadAllUsersList();
+  initProviders() async{
+    await ref.read(allFakeUsersProvider.future);
+    ref.read(userProvider);
   }
 
   @override
@@ -152,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: TextButton(
                       onPressed: () {
                         if (validateData()) {
-                          Provider.of<UserViewModel>(context, listen: false)
+                          ref.read(userProvider)
                               .filterUsersList(
                                   collectData(),
                                   queryItemWidget.length == 2

@@ -1,10 +1,16 @@
+library query_builder;
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:query_builder_task/ui/home_screen.dart';
-import 'package:query_builder_task/view_models/user_view_model.dart';
+import 'data/api_caller.dart';
+import 'models/user_model.dart';
+import 'view_models/user_view_model.dart';
+
+part 'providers.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -12,17 +18,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<UserViewModel>(
-        create: (_) => UserViewModel(),
-        child: Consumer<UserViewModel>(builder: (context, value, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Query Builder',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            home: const HomeScreen(),
-          );
-        }));
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Query Builder',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const HomeScreen(),
+    );
   }
 }
