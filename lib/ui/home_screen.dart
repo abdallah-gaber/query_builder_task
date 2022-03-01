@@ -18,16 +18,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<QueryItemWidget> queryItemWidget = [QueryItemWidget()];
   List<String> logicOperators = [LogicOperators.AND, LogicOperators.OR];
-  late String selectedLogicOperator;
+  late List<String> selectedLogicOperator = [];
+
+  final _animatedListKey = GlobalKey<AnimatedListState>();
 
   @override
   void initState() {
     super.initState();
-    selectedLogicOperator = logicOperators[0];
     initProviders();
   }
 
-  initProviders() async{
+  initProviders() async {
     await ref.read(allFakeUsersProvider.future);
     ref.read(userProvider);
   }
@@ -54,97 +55,130 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         fontWeight: FontWeight.w700,
                         fontSize: 24),
                   )),
-                  if (queryItemWidget.length != 2)
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            queryItemWidget
-                                .add(QueryItemWidget(firstWidget: false));
-                          });
-                        },
-                        icon: const Icon(
-                          CupertinoIcons.add_circled,
-                          color: Colors.green,
-                        ))
+                  // if (queryItemWidget.length != 2)
+                  IconButton(
+                      onPressed: () {
+                        queryItemWidget
+                            .add(QueryItemWidget(firstWidget: false));
+                        selectedLogicOperator.add(logicOperators[0]);
+                        _animatedListKey.currentState!
+                            .insertItem(queryItemWidget.length - 1);
+                      },
+                      icon: const Icon(
+                        CupertinoIcons.add_circled,
+                        color: Colors.green,
+                      ))
                 ],
               ),
               const SizedBox(
                 height: 10,
               ),
-              ...(queryItemWidget.map((e) {
-                if (queryItemWidget.indexOf(e) == 0) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF7F7F7),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: e),
-                      if (queryItemWidget.length > 1)
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          width: MediaQuery.of(context).size.width / 4,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10.0)),
-                              border:
-                                  Border.all(color: const Color(0xFFE5E5E5))),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              items: logicOperators.map((item) {
-                                return DropdownMenuItem<String>(
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                  value: item,
-                                );
-                              }).toList(),
-                              value: selectedLogicOperator,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedLogicOperator = value!;
-                                });
-                              },
+              AnimatedList(
+                  key: _animatedListKey,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  initialItemCount: queryItemWidget.length,
+                  itemBuilder: (context, index, animation) {
+                    if (index == 0) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.all(10),
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFF7F7F7),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              child: queryItemWidget[index]),
+                        ],
+                      );
+                    } else {
+                      return SizeTransition(
+                        sizeFactor: animation,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 10),
+                              width: MediaQuery.of(context).size.width / 4,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10.0)),
+                                  border: Border.all(
+                                      color: const Color(0xFFE5E5E5))),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  isExpanded: true,
+                                  items: logicOperators.map((item) {
+                                    return DropdownMenuItem<String>(
+                                      child: Text(
+                                        item,
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                      value: item,
+                                    );
+                                  }).toList(),
+                                  value: selectedLogicOperator[index - 1],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedLogicOperator [index - 1] = value!;
+                                    });
+                                  },
+                                ),
+                              ),
                             ),
-                          ),
-                        )
-                    ],
-                  );
-                } else {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF7F7F7),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(child: e),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                queryItemWidget.remove(e);
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.remove_circle_outline,
-                              color: Colors.red,
-                            ))
-                      ],
-                    ),
-                  );
-                }
-              }).toList()),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.all(10),
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFF7F7F7),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(child: queryItemWidget[index]),
+                                  IconButton(
+                                      onPressed: () {
+                                        var removedItem =
+                                            queryItemWidget[index];
+                                        queryItemWidget.removeAt(index);
+                                        selectedLogicOperator.removeAt(index - 1); // because it's starting from the second item
+                                        AnimatedList.of(context).removeItem(
+                                            index,
+                                            (context, animation) =>
+                                                SizeTransition(
+                                                  sizeFactor: animation,
+                                                  child: removedItem,
+                                                )
+                                            // (context, animation) => SlideTransition(
+                                            //     position: animation.drive(Tween(
+                                            //             begin: const Offset(2, 0.0),
+                                            //             end: const Offset(0.0, 0.0))
+                                            //         .chain(CurveTween(
+                                            //             curve:
+                                            //                 Curves.elasticInOut))),
+                                            //     child: removedItem)
+                                            );
+                                      },
+                                      icon: const Icon(
+                                        Icons.remove_circle_outline,
+                                        color: Colors.red,
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  }),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 20),
                 width: MediaQuery.of(context).size.width,
@@ -156,12 +190,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: TextButton(
                       onPressed: () {
                         if (validateData()) {
-                          ref.read(userProvider)
-                              .filterUsersList(
-                                  collectData(),
-                                  queryItemWidget.length == 2
-                                      ? selectedLogicOperator
-                                      : null);
+                          ref.read(userProvider).filterUsersList(
+                              collectData(),
+                              selectedLogicOperator);
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
                                   const FilterResultScreen()));

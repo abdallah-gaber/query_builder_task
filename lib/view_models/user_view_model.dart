@@ -9,18 +9,38 @@ class UserViewModel with ChangeNotifier {
 
   UserViewModel(this.allFakeUsersList);
 
-  filterUsersList(List<QueryModel> queryModels, String? logicOperator) {
+  filterUsersList(List<QueryModel> queryModels, List<String> logicOperators) {
     filteredUsersList = [];
+    bool matched;
+    List<bool> combinedList;
     for (UserModel um in allFakeUsersList) {
-      if ((logicOperator != null &&
-              queryModels.length == 2 &&
-              LogicOperators.combineLogicOperations(
-                  meetQuery(queryModels[0], um),
-                  meetQuery(queryModels[1], um),
-                  logicOperator)) ||
-          (logicOperator == null &&
-              queryModels.length == 1 &&
-              meetQuery(queryModels[0], um))) {
+      matched = false;
+      if ((logicOperators.isEmpty &&
+          queryModels.length == 1 &&
+          meetQuery(queryModels[0], um))) {
+        matched = true;
+      } else {
+        combinedList = [];
+        for (int i = 0 ; i<logicOperators.length ; i++) {
+          if(combinedList.isEmpty){
+            combinedList.add(meetQuery(queryModels[0], um));
+          }
+          if(logicOperators[i] == LogicOperators.AND){
+            combinedList.last = combinedList.last && meetQuery(queryModels[i + 1], um);
+          }else{
+            combinedList.add(meetQuery(queryModels[i + 1], um));
+          }
+        }
+
+        for(bool itemInCombined in combinedList){
+          if(itemInCombined){
+            matched = true;
+            break;
+          }
+        }
+      }
+
+      if (matched) {
         filteredUsersList.add(um);
       }
     }
@@ -69,11 +89,17 @@ class UserViewModel with ChangeNotifier {
     } else {
       switch (operator) {
         case StringOperators.STARTS_WITH:
-          return userColumnValue.toLowerCase().startsWith(columnValue.toLowerCase());
+          return userColumnValue
+              .toLowerCase()
+              .startsWith(columnValue.toLowerCase());
         case StringOperators.ENDS_WITH:
-          return userColumnValue.toLowerCase().endsWith(columnValue.toLowerCase());
+          return userColumnValue
+              .toLowerCase()
+              .endsWith(columnValue.toLowerCase());
         case StringOperators.CONTAINS:
-          return userColumnValue.toLowerCase().contains(columnValue.toLowerCase());
+          return userColumnValue
+              .toLowerCase()
+              .contains(columnValue.toLowerCase());
         case StringOperators.EXACT:
           return columnValue.toLowerCase() == userColumnValue.toLowerCase();
       }

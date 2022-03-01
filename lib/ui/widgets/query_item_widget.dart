@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:query_builder_task/common/strings.dart';
 import 'package:query_builder_task/models/query_model.dart';
 
@@ -152,7 +153,10 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
               borderRadius: const BorderRadius.all(Radius.circular(10.0)),
               border: Border.all(color: const Color(0xFFE5E5E5))),
           child: TextField(
-            keyboardType: TextInputType.text,
+            keyboardType: ColumnNames.useNumberOperator(selectedColumn!) ? TextInputType.number : TextInputType.text,
+            inputFormatters: ColumnNames.useNumberOperator(selectedColumn!) ? (<TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ] ) : null,
             onChanged: (data) {
               setState(() {
                 widget.queryModel.data = data;
