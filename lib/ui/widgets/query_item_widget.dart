@@ -40,6 +40,8 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
   String? selectedColumn;
   String? selectedOperator;
 
+  TextEditingController dataTextEditingController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -83,8 +85,14 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                       value: selectedColumn,
                       onChanged: (value) {
                         setState(() {
+                          if(ColumnNames.useNumberOperator(value!) != ColumnNames.useNumberOperator(selectedColumn!)){
+                            dataTextEditingController.clear();
+                            setState(() {
+                              widget.queryModel.data = "";
+                            });
+                          }
                           selectedOperator =
-                              ColumnNames.useNumberOperator(value!)
+                              ColumnNames.useNumberOperator(value)
                                   ? numberOperators[0]
                                   : stringOperators[0];
                           widget.queryModel.operator = selectedOperator;
@@ -153,6 +161,7 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
               borderRadius: const BorderRadius.all(Radius.circular(10.0)),
               border: Border.all(color: const Color(0xFFE5E5E5))),
           child: TextField(
+            controller: dataTextEditingController,
             keyboardType: ColumnNames.useNumberOperator(selectedColumn!) ? TextInputType.number : TextInputType.text,
             inputFormatters: ColumnNames.useNumberOperator(selectedColumn!) ? (<TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly
