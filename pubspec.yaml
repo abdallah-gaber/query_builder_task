@@ -43,6 +43,10 @@ dependencies:
   #HTTP requests
   dio: ^4.0.0
 
+
+  #google fonts
+  google_fonts: ^2.3.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
