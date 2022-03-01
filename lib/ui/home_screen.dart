@@ -43,11 +43,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             FocusScope.of(context).unfocus();
           },
           child: Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(16),
             child: ListView(
               children: [
                 const SizedBox(
-                  height: 40,
+                  height: 61,
                 ),
                 Row(
                   children: [
@@ -56,8 +56,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       "Query Builder",
                       style: TextStyle(
                           color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 24),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 32),
                     )),
                     // if (queryItemWidget.length != 2)
                     IconButton(
@@ -69,14 +69,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           _animatedListKey.currentState!
                               .insertItem(queryItemWidget.length - 1);
                         },
-                        icon: const Icon(
-                          CupertinoIcons.add_circled,
-                          color: Colors.green,
-                        ))
+                        icon: Image.asset('assets/add.png', height: 28, width: 28,))
                   ],
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 24,
                 ),
                 AnimatedList(
                     key: _animatedListKey,
@@ -107,16 +104,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: const EdgeInsets.symmetric(vertical: 10),
+                                margin: const EdgeInsets.symmetric(vertical: 24),
                                 width: MediaQuery.of(context).size.width / 4,
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: const BorderRadius.all(
-                                        Radius.circular(10.0)),
+                                        Radius.circular(8.0)),
                                     border: Border.all(
-                                        color: const Color(0xFFE5E5E5))),
+                                        color: const Color(0x33808080))),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
                                     isExpanded: true,
@@ -124,7 +121,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       return DropdownMenuItem<String>(
                                         child: Text(
                                           item,
-                                          style: const TextStyle(fontSize: 14),
+                                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                                         ),
                                         value: item,
                                       );
@@ -165,10 +162,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                   )
                                               );
                                         },
-                                        icon: const Icon(
-                                          Icons.remove_circle_outline,
-                                          color: Colors.red,
-                                        ))
+                                        icon: Image.asset('assets/remove.png', height: 28, width: 28,))
                                   ],
                                 ),
                               ),
@@ -178,7 +172,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       }
                     }),
                 Container(
-                  margin: const EdgeInsets.symmetric(vertical: 20),
+                  margin: const EdgeInsets.symmetric(vertical: 24),
                   width: MediaQuery.of(context).size.width,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
@@ -196,12 +190,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     const FilterResultScreen()));
                           }
                         },
-                        child: const Center(
-                          child: Icon(
-                            CupertinoIcons.search,
-                            color: Colors.white,
-                          ),
-                        )),
+                        child: Image.asset('assets/search.png', height: 28, width: 28,)),
                   ),
                 ),
               ],

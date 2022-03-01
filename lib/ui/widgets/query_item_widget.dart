@@ -64,12 +64,12 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                     ? 2
                     : 1,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10.0)),
-                      border: Border.all(color: const Color(0xFFE5E5E5))),
+                      border: Border.all(color: const Color(0x33808080))),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       isExpanded: true,
@@ -77,7 +77,7 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                         return DropdownMenuItem<String>(
                           child: Text(
                             item,
-                            style: const TextStyle(fontSize: 14),
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                           value: item,
                         );
@@ -104,16 +104,16 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                   ),
                 )),
             const SizedBox(
-              width: 10,
+              width: 8,
             ),
             Expanded(
               flex: 1,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                    border: Border.all(color: const Color(0xFFE5E5E5))),
+                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                    border: Border.all(color: const Color(0x33808080))),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     isExpanded: true,
@@ -126,7 +126,7 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                       return DropdownMenuItem<String>(
                         child: Text(
                           item,
-                          style: const TextStyle(fontSize: 14),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                         value: item,
                       );
@@ -155,11 +155,11 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
           height: 10,
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-              border: Border.all(color: const Color(0xFFE5E5E5))),
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+              border: Border.all(color: const Color(0x33808080))),
           child: TextField(
             controller: dataTextEditingController,
             keyboardType: ColumnNames.useNumberOperator(selectedColumn!) ? TextInputType.number : TextInputType.text,
@@ -171,9 +171,11 @@ class _QueryItemWidgetState extends State<QueryItemWidget> {
                 widget.queryModel.data = data;
               });
             },
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Data',
+              hintStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),
         ),

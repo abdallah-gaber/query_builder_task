@@ -27,22 +27,22 @@ class FilterResultScreen extends ConsumerWidget {
         backgroundColor: const Color(0xFFF1F1F1),
         body: SafeArea(
           child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(16),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
-                      height: 20,
+                      height: 11,
                     ),
                     const Text(
                       "Users",
                       style: TextStyle(
                           color: Colors.black,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 26),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 32),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 24,
                     ),
                     Expanded(
                       child: data.filteredUsersList.isNotEmpty
